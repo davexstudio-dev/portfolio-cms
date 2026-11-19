@@ -1,0 +1,12 @@
+{
+  "name": "portfolio-cms",
+  "private": true,
+  "license": "MIT",
+  "packageManager": "pnpm@10.0.0",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "typecheck": "turbo run typecheck",
+    "build": "turbo run build",
+    "test": "turbo run test"
+  }
+}
