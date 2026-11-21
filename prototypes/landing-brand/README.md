@@ -5,9 +5,11 @@ Prototype des cinq directions de la landing de portfolio-cms, produit pendant le
 ## Lancer
 
 ```bash
-pnpm install
-pnpm dev        # http://localhost:5190/?variant=A
+pnpm install --ignore-workspace
+pnpm --ignore-workspace dev        # http://localhost:5190/?variant=A
 ```
+
+`--ignore-workspace` est nécessaire : le dépôt a son propre espace de travail pnpm, qui n'inclut pas ce dossier.
 
 Le commutateur en bas de page change de variante (flèches ← →, ou `?variant=A` à `F`).
 
