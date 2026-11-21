@@ -1,0 +1,62 @@
+name: AI PR review
+
+# SECURITY MODEL
+# - Trigger is `pull_request`, never `pull_request_target`.
+# - The agent code comes from the BASE commit (trusted). The PR head is only fetched as git
+#   objects and diffed; nothing from the PR is executed or installed while the secret is available.
+# - Minimal token: read contents, write PR comments. No merge, no push, no deploy.
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: ai-pr-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Skip fork PRs
+        id: fork
+        env:
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+        run: |
+          if [ "$HEAD_REPO" != "$GITHUB_REPOSITORY" ]; then
+            echo "step=skip status=skipped reason=fork-pr-secrets-unavailable"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout trusted base (agent code + repo rules)
+        if: steps.fork.outputs.skip != 'true'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Fetch PR head as git data only (not checked out)
+        if: steps.fork.outputs.skip != 'true'
+        env:
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: git fetch --no-tags origin "$HEAD_SHA"
+
+      - uses: actions/setup-node@v4
+        if: steps.fork.outputs.skip != 'true'
+        with:
+          node-version: 22
+
+      - name: Review diff with Claude
+        if: steps.fork.outputs.skip != 'true'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: node scripts/ai-pr-review/index.mjs

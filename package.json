@@ -3,10 +3,14 @@
   "private": true,
   "license": "MIT",
   "packageManager": "pnpm@10.0.0",
-  "engines": { "node": ">=22" },
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "typecheck": "turbo run typecheck",
     "build": "turbo run build",
-    "test": "turbo run test"
+    "test": "turbo run test",
+    "ai-review:test": "node --test \"scripts/ai-pr-review/test/*.test.mjs\"",
+    "ai-review:dry-run": "node scripts/ai-pr-review/index.mjs --dry-run"
   }
 }
