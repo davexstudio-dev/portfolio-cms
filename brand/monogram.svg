@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="portfolio-cms">
+  <title>portfolio-cms</title>
+  <style>
+    .bg { fill: #005d39; }
+    .p { fill: #fbfaf7; }
+    .bowl { fill: none; stroke: #fbfaf7; }
+    .dash { fill: #dbf2e4; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #56d298; }
+      .p { fill: #0e1913; }
+      .bowl { stroke: #0e1913; }
+      .dash { fill: #0e1913; }
+    }
+  </style>
+  <rect class="bg" width="64" height="64" rx="14"/>
+  <rect class="p" x="12" y="16" width="7" height="34" rx="3.5"/>
+  <circle class="bowl" cx="26.5" cy="27" r="9.5" stroke-width="7"/>
+  <rect class="dash" x="41" y="23.5" width="12" height="7" rx="3.5"/>
+</svg>

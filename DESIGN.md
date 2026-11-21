@@ -21,14 +21,15 @@
 - **Direction** : « éditorial calme » [validé]. Base neutre chaude, un seul accent émeraude profond, beaucoup d'espace, traits fins, une mono pour le code. Pas de dégradés criards ni d'effets gadget.
 - **Personnalité** : éditorial, calme, précis ; à éviter : criard, gadget, « hacker » [validé].
 - **Nom** : « portfolio-cms », toujours en minuscules, même en début de phrase [validé].
-- **Logo** : logotype texte en minuscules, le trait d'union traité comme élément graphique, plus un monogramme géométrique simple pour le favicon et les avatars, en SVG. Aucun pictogramme figuratif (dossier, plume) [validé]. Dessin exact : à définir pendant les variantes.
+- **Logo** : logotype texte en minuscules, le trait d'union traité comme élément graphique, plus un monogramme géométrique simple pour le favicon et les avatars, en SVG. Aucun pictogramme figuratif (dossier, plume) [validé]. **Monogramme retenu** [validé le 2026-11-21] : un « p » géométrique (fût et panse) suivi du trait d'union à mi-hauteur, sur un carré arrondi émeraude ; le fichier `brand/monogram.svg` suit le thème du système (émeraude profond en clair, émeraude éclairci en sombre). Pistes écartées : un graphe git (trop proche des icônes de gestion de versions courantes, et l'idée vit déjà dans le schéma de la landing) et un « p » serif (traits trop fins à 16 px).
 - **Visuels** : motifs SVG (fil de commits, lignes de frontmatter, bloc MDX), jamais présentés comme des captures du produit. Ni photo ni image générée [validé].
 - **Mouvement** : minimal et utile (survols, apparition douce, bascule de thème), `prefers-reduced-motion` respecté, aucune animation au défilement [validé].
 - **Directions écartées** : « startup SaaS colorée à dégradés » et « terminal hacker sombre » [validé].
 
 - **Landing retenue** [validé, 2026-11-21] : combinaison de trois variantes du prototype. Le **schéma** de E (une ligne de stations : la branche de travail part de `develop` et y revient par une pull request ; `main` et `develop` ne sont jamais touchées), le **panneau de fichier MDX** de B (il surligne la ligne correspondant au principe survolé, avec la mention « ce n'est pas une capture du produit »), et le **fond éditorial** de A (grands titres serif, principes en liste de définitions, section « en construction » sobre). Sous 1280 px, le schéma devient une liste verticale de stations. Prototype jetable : `?variant=F`, dossier temporaire de la session.
 - **Améliorations après audit** [proposé, 2026-11-21] : (1) une action claire sous l'accroche, « Suivre le projet sur GitHub » (primaire) et « Lire la documentation » (secondaire), car la landing est en mode Persuade et ne peut pas promettre d'essai ; (2) la règle « le CMS n'écrit jamais directement sur develop ni sur main » est mise en avant dans le schéma (texte d'encre, 17 px) ; (3) la section des principes s'intitule « Nos principes », car tous ne sont pas des refus ; (4) une seule pastille « en construction », celle de l'en-tête ; (5) un pied de page sobre (licence MIT, Davex Studio Development, code source) ; (6) toutes les cibles cliquables font au moins 44 px (mesuré à 375 px). Détecteur d'impeccable : aucun défaut.
-- **Polices du prototype** [proposé] : Instrument Sans (texte), Newsreader (titres), JetBrains Mono (code), toutes OFL.
+- **Polices** [validé le 2026-11-21] : Instrument Sans (texte), Newsreader (titres), JetBrains Mono (code), toutes OFL. Jeux comparés et écartés : Hanken Grotesk + Fraunces + IBM Plex Mono (plus « livre », moins neutre) et Inter + Source Serif 4 + Geist Mono (neutre, peu de personnalité).
+- **Prototype conservé** : la branche jetable `prototype/landing-brand` (dossier `prototypes/landing-brand`) contient les variantes A à F et la variante retenue. Elle n'est pas destinée à `main` ; le README du dossier explique comment la lancer.
 - **Fond en shader** [validé le 2026-11-21 : option « composant maison », sans 21st.dev ni beUi] : un fond WebGL discret derrière l'en-tête de la landing, construit par nous sur `@paper-design/shaders-react` (Apache-2.0), composant `GrainGradient` (forme « wave », vitesse 0,12, intensité 0,6). Une seconde couche de **brouillard** (shader `PerlinNoise`, quatre octaves, vitesse 0,05, floue de 18 px, sur fond transparent) se superpose au grain : blanc laiteux en clair, vert sombre en sombre (`#284838`, plus foncé que le texte discret, pour ne jamais faire perdre de contraste). Les deux couches s'effacent vers le bas par un masque pour que le texte reste sur l'aplat. Garde-fous : teintes émeraude et neutre chaud très atténuées, jamais de dégradé criard ; les couleurs du shader sont des valeurs hexadécimales regroupées dans un seul fichier (le shader n'accepte pas les variables CSS) ; texte à 4,5:1 minimum sur chaque couleur du shader (clair : 4,88:1 au pire ; sombre : 4,94:1 au pire avec le brouillard, mesuré par calcul sur le mélange le plus défavorable) ; image fixe quand `prefers-reduced-motion` est actif (vérifié : deux captures espacées de 2 s sont identiques) ; aplat de couleur en repli si WebGL est absent ; limité à la landing, jamais en documentation ni dans le CMS. Coût : environ +31 ko de JavaScript compressé.
 - **Variantes écartées** : C (journal git, trop proche de A), D (commande d'abord, contenu caché derrière un clic).
 
@@ -58,12 +59,12 @@
 - **Jetons** : `packages/ui/src/styles/tokens.css`, à exposer au thème Tailwind dans le CSS du paquet `ui` quand il existera (`@theme inline`) [proposé].
 - **Palette** [proposé, contrastes contrôlés] : neutres chauds (teinte 85) ; **accent émeraude** (teinte 160) : `primary` foncé en clair (L 0,42), éclairci en sombre (L 0,78). `accent` est un fond émeraude très doux. `destructive` en rouge-brique.
 - **Statuts** (toujours avec une icône et un mot, jamais la couleur seule) : `construction` (ambre, pastille « en construction » de l'en-tête), `soon` (neutre, marque « à venir » de la documentation).
-- **Polices** [validé : trio ouvert ; familles exactes à choisir pendant les variantes] : un sans-serif pour l'interface et le texte courant, une serif d'affichage pour les grands titres de la landing, une mono pour le code. Toutes sous licence ouverte (SIL OFL), auto-hébergées (`@fontsource`), couvrant le latin.
+- **Polices** [validé] : Instrument Sans pour l'interface et le texte courant, Newsreader (serif) pour les grands titres de la landing, JetBrains Mono pour le code. Toutes sous licence ouverte (SIL OFL), auto-hébergées (`@fontsource`), couvrant le latin.
 - **Rayon** : `--radius: 0.5rem` [proposé].
 
 ## 7. Composants
 
-- **Génériques** : le futur paquet `packages/ui` (shadcn/ui officiel et composants maison), style et famille (Base UI ou Radix) à choisir au ticket #21.
+- **Génériques** : le futur paquet `packages/ui` (shadcn/ui officiel et composants maison). **Style `nova`, famille Base UI** [validé le 2026-11-21] : sobre, rayon de 8 px comme `--radius`. Compromis accepté : Fumadocs UI embarque ses propres primitives Radix, donc le site chargera deux bibliothèques de primitives (Base UI pour nos composants, Radix pour Fumadocs). Option écartée : la famille Radix, qui évitait ce doublon. À réévaluer si le poids de page du site devient un problème. Le style nova s'applique avec les hauteurs tactiles de la section 5 (un bouton nova fait 32 px d'origine : il faut le porter à 44 px sur le site).
 - **Métier** : dans l'application concernée.
 - **Page de démonstration** : `/design` en développement seulement, créée avec le site.
 - **Règle** : aucune valeur de couleur ou d'espacement arbitraire ; les composants shadcn ne sont pas restylés à l'usage. Ces règles sont aussi écrites dans la configuration de `@shadcn/lint` (le présent fichier en est la source lisible) [validé].
@@ -102,9 +103,7 @@ Le linter `@shadcn/lint` rejoint la CI d'`apps/site` et `apps/cms` au ticket #21
 
 ## 11. Questions ouvertes
 
-- Familles exactes des trois polices : Instrument Sans, Newsreader et JetBrains Mono sont utilisées dans le prototype ; à valider.
 - Fond en shader : contraste mesuré par calcul sur les couleurs du shader, pas encore sur les pixels du rendu ; poids (+31 ko compressés) à confirmer acceptable pour une landing ; à retester sur un téléphone.
-- Dessin final du logotype et du monogramme.
-- Style shadcn (Base UI ou Radix, vega / nova / lyra…) : à choisir au ticket #21.
+- Poids de page : la famille Base UI s'ajoute aux primitives Radix de Fumadocs ; mesurer l'effet au ticket du squelette et décider si le doublon reste acceptable.
 - Tutoiement ou vouvoiement : vouvoiement proposé, à confirmer.
 - Seuil de cible tactile et taille du texte : proposés, à confirmer.
