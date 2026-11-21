@@ -89,7 +89,7 @@ Règle : relire chaque élément avant installation ; demander l'accord avant d'
 - **Glossaire** : celui de davex-studio (CMS git, Bloc, Composant maison, Registre autorisé) ; le dépôt portfolio-cms n'a pas encore le sien.
 - **Personne** : vouvoiement [proposé]. Français direct, phrases courtes (15 mots en moyenne), pas de superlatifs, pas d'émojis, pas de futur présenté comme du présent [validé].
 - **Exemple d'accroche** : « Éditez votre portfolio en MDX, sans quitter Git. »
-- **Contenu public** : le dépôt est public ; n'y écrire que ce qui existe et ce qui est décidé pour le projet ouvert, jamais d'offre, de tarif ni de feuille de route privée [validé].
+- **Contenu public** : le dépôt est public ; n'y écrire que ce qui existe et ce qui est décidé pour le projet ouvert [validé].
 - **Textes à reprendre tels quels** : pastille « en construction » ; marque « à venir ».
 
 ## 10. Commandes de vérification
