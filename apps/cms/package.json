@@ -1,0 +1,10 @@
+{
+  "name": "@portfolio-cms/cms",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@portfolio-cms/ui": "workspace:*",
+    "react": "^19.0.0"
+  }
+}
