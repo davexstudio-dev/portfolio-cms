@@ -1,6 +1,6 @@
 # portfolio-cms
 
-Un CMS git open source pour sites de portfolio (développeur, designer, etc.).
+Le CMS des agences et des équipes marketing : publiez vos sites jusqu'à dix fois plus vite, sans développeur.
 
 Le contenu reste en fichiers MDX dans votre dépôt : pas de base de données. Une sauvegarde crée un commit sur une branche de travail et ouvre une pull request, et votre CI continue de refuser le contenu invalide.
 
