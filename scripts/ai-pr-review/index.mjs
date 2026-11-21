@@ -6,10 +6,11 @@ import { appendFileSync } from "node:fs";
 import { parseArgs } from "node:util";
 import { collectContext } from "./context.mjs";
 import { makeCallModel, MODEL } from "./anthropic.mjs";
-import { SYSTEM_PROMPT, buildUserMessage } from "./prompt.mjs";
+import { buildSystemPrompt, buildUserMessage } from "./prompt.mjs";
 import { runReview } from "./review.mjs";
 import { renderComment, renderFailureComment } from "./comment.mjs";
 import { upsertComment } from "./github.mjs";
+import { resolveLanguage } from "./strings.mjs";
 
 // Never call process.exit(): on Windows it can race with closing fetch handles. Set exitCode and let the loop drain.
 async function main() {
@@ -60,7 +61,13 @@ async function main() {
     { process.exitCode = 0; return; }
   }
   
-  const callModel = makeCallModel({ apiKey, system: SYSTEM_PROMPT });
+  const language = resolveLanguage();
+
+  
+  log({ step: "config", language });
+
+  
+  const callModel = makeCallModel({ apiKey, system: buildSystemPrompt(language) });
   const result = await runReview({
     callModel,
     messages: [{ role: "user", content: buildUserMessage(ctx) }],
@@ -70,11 +77,11 @@ async function main() {
   let body;
   let redactions = 0;
   if (result.ok) {
-    const note = ctx.diffTruncated ? `Diff truncated to ${ctx.diff.length} of ${ctx.diffChars} chars: part of the change was not reviewed.` : undefined;
-    ({ body, redactions } = renderComment(result.review, { note }));
+    const truncated = ctx.diffTruncated ? { sent: ctx.diff.length, total: ctx.diffChars } : undefined;
+    ({ body, redactions } = renderComment(result.review, { truncated, language }));
   } else {
     console.log(`step=validate status=failed reason=${result.reason}`);
-    body = renderFailureComment(result.reason);
+    body = renderFailureComment(result.reason, language);
   }
   log({ step: "redaction", redactions });
   

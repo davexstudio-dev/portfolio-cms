@@ -1,13 +1,18 @@
 import { sanitizeForComment } from "./redact.mjs";
+import { getStrings } from "./strings.mjs";
 
 export const MARKER = "<!-- ai-pr-review-agent -->";
-const FOOTER = "_A human must validate this review before any change is made. This agent is advisory only: it cannot merge, push or deploy._";
 const ICON = { low: "🟢", medium: "🟡", high: "🟠", critical: "🔴" };
 
-const cell = (s) => s.replace(/\|/g, "\\|").replace(/\r?\n/g, " ");
+const cell = (s) => s.replace(/\|/g, "\|").replace(/\r?\n/g, " ");
 
-/** @returns {{ body: string, redactions: number }} */
+/**
+ * @param {object} review validated review
+ * @param {{ truncated?: { sent: number, total: number }, language?: string }} [meta]
+ * @returns {{ body: string, redactions: number }}
+ */
 export function renderComment(review, meta = {}) {
+  const t = getStrings(meta.language);
   let redactions = 0;
   const clean = (s) => {
     const r = sanitizeForComment(s);
@@ -15,34 +20,28 @@ export function renderComment(review, meta = {}) {
     return r.text;
   };
   const risks = review.risks.length
-    ? "| Severity | Location | Why |\n|---|---|---|\n" +
+    ? `| ${t.colSeverity} | ${t.colLocation} | ${t.colWhy} |\n|---|---|---|\n` +
       review.risks.map((r) => `| ${ICON[r.severity]} ${r.severity} | \`${clean(r.file).replace(/`/g, "")}${r.line ? `:${r.line}` : ""}\` | ${cell(clean(r.why))} |`).join("\n")
-    : "No risk found.";
-  const arbitration = review.needs_human_arbitration ? "\n> ⚖️ **Needs human arbitration**: at least one point is a product-level decision.\n" : "";
+    : t.noRisk;
   const body = [
     MARKER,
-    "## 🤖 AI review",
-    `Confidence: **${Math.round(review.confidence * 100)}%**${arbitration ? "" : ""}`,
-    arbitration,
-    "### Risks",
+    `## ${t.title}`,
+    `${t.confidence}${t.colon}**${Math.round(review.confidence * 100)}%**`,
+    review.needs_human_arbitration ? `> ${t.arbitration}` : "",
+    `### ${t.risks}`,
     risks,
-    "### Proposed fix",
+    `### ${t.proposedFix}`,
     clean(review.proposed_fix),
-    "### Checks summary",
+    `### ${t.checks}`,
     clean(review.checks_summary),
-    meta.note ? `\n_${clean(meta.note)}_` : "",
+    meta.truncated ? `_${t.truncated(meta.truncated.sent, meta.truncated.total)}_` : "",
     "---",
-    FOOTER,
+    t.footer,
   ].filter((x) => x !== "").join("\n\n");
   return { body, redactions };
 }
 
-export function renderFailureComment(reason) {
-  return [
-    MARKER,
-    "## 🤖 AI review",
-    `The agent could not produce a valid review (${sanitizeForComment(reason).text}). No analysis is available for this commit.`,
-    "---",
-    FOOTER,
-  ].join("\n\n");
+export function renderFailureComment(reason, language) {
+  const t = getStrings(language);
+  return [MARKER, `## ${t.title}`, t.failure(sanitizeForComment(reason).text), "---", t.footer].join("\n\n");
 }

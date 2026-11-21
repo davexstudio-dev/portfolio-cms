@@ -27,7 +27,9 @@ test("leaves clean text untouched", () => {
   assert.deepEqual(redact("Add a unit test for slugify()."), { text: "Add a unit test for slugify().", count: 0 });
 });
 test("defuses @mentions", () => {
-  assert.ok(!/@[a-z]/.test(sanitizeForComment("ping @someone").text));
+  assert.equal(sanitizeForComment("ping @someone and @org/team").text, "ping `@someone` and `@org/team`");
+  assert.equal(sanitizeForComment("already `@code` here").text, "already `@code` here");
+  assert.equal(sanitizeForComment("mail a@b.co").text, "mail a@b.co");
 });
 test("rendered comment never contains a secret echoed by the model, and has the 3 blocks + footer", () => {
   const { body, redactions } = renderComment({
@@ -39,6 +41,6 @@ test("rendered comment never contains a secret echoed by the model, and has the 
   });
   assert.equal(redactions, 2);
   assert.ok(!body.includes(fakeAnthropic) && !body.includes(fakeGh));
-  for (const h of ["### Risks", "### Proposed fix", "### Checks summary", "A human must validate"]) assert.ok(body.includes(h), h);
+  for (const h of ["### Risques", "### Correctif proposé", "### Résumé des vérifications", "Une personne doit valider"]) assert.ok(body.includes(h), h);
   assert.ok(body.startsWith("<!-- ai-pr-review-agent -->"));
 });

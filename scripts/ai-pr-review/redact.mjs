@@ -1,5 +1,5 @@
 // Guardrail: anything that looks like a secret is replaced before it can reach a public PR comment.
-// Also defuses @mentions so the bot can never ping people.
+// Also neutralises @mentions so the bot can never ping people.
 
 export const REDACTED = "[REDACTED]";
 
@@ -34,8 +34,13 @@ export function redact(input) {
   return { text, count };
 }
 
+// Wrap @mentions in an inline code span: GitHub does not notify for code, and the visible text is unchanged.
+// Text already inside a code span is left alone; an @ glued to a word (an email address) is not a mention.
 export function defuseMentions(text) {
-  return text.replace(/@(?=[A-Za-z0-9])/g, "@​");
+  return text
+    .split("`")
+    .map((part, i) => (i % 2 === 1 ? part : part.replace(/(^|[^\w`])@([A-Za-z0-9][\w-]*(?:\/[\w.-]+)?)/g, "$1`@$2`")))
+    .join("`");
 }
 
 export function sanitizeForComment(text) {

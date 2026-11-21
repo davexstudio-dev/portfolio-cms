@@ -56,6 +56,9 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GITHUB_TOKEN: ${{ github.token }}
+          # Language of the review and of the fixed comment strings: "French" (default) or "English".
+          # Switch it with a repository variable (Settings > Variables > REVIEW_LANGUAGE), no code change needed.
+          REVIEW_LANGUAGE: ${{ vars.REVIEW_LANGUAGE }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
