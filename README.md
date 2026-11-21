@@ -2,7 +2,7 @@
 
 Un CMS git open source pour sites de portfolio (développeur, designer, etc.).
 
-Le contenu reste en fichiers MDX dans votre dépôt : pas de base de données. Une sauvegarde crée un commit sur une branche de travail et ouvre une pull request, et votre CI continue de refuser le contenu invalide.
+Le contenu reste en fichiers MDX dans votre dépôt : pas de base de données. Une sauvegarde crée un commit sur une branche de travail et ouvre une pull request,  et votre CI continue de refuser le contenu invalide.
 
 > **Statut : en construction.** Rien n'est utilisable pour l'instant.
 
